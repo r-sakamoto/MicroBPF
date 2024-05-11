@@ -31,17 +31,18 @@ def check_filename(string):
     
 
 def valid_function_name(function):
+    print(function)
     p1 = Popen(["cat", "/proc/kallsyms"], stdout=PIPE)
-    p2 = Popen(["grep", function], stdin=p1.stdout, stdout=PIPE)
-    out = p2.stdout.read()
+    p2 = Popen(["grep","--color=never", function], stdin=p1.stdout, stdout=PIPE)
+    out = p2.stdout.read().decode('utf-8')
     lines = out.split('\n')
     entries = len(lines) - 1
     if entries == 0:
-        print "%s() is not traceable." % (function)
+        print( "%s() is not traceable." % (function))
     elif entries == 1:
         function_name = lines[0].split()[2]
         if __check_name(function, function_name) == NAME_NOT:
-            print "%s matches %s()." % (function, function_name)
+            print( "%s matches %s()." % (function, function_name))
         else:
             return function_name
     else:
@@ -54,9 +55,9 @@ def valid_function_name(function):
             elif flag == NAME_PREFIX or flag == NAME_SUFFIX:
                 name_list.append(function_name)
         if len(name_list) == 0:
-            print "%s() is not traceable." % (function)
+            print ("%s() is not traceable." % (function))
         if len(name_list) > 1: 
-            print "Multiple functions %s match with \"%s\". Please be specific." % (name_list, function)
+            print ("Multiple functions %s match with \"%s\". Please be specific." % (name_list, function))
         else:
             return name_list[0]
 

@@ -502,7 +502,7 @@ for i in range(len(kprobe_functions_list)):
     function = valid_function_name(function)
     if function == None:
         exit()
-    if b.get_kprobe_functions(function):
+    if b.get_kprobe_functions(function.encode('utf8')):
         b.attach_kprobe(event=function, fn_name=trace_function)
     else:
         print("ERROR: %s() kernel function not found or traceable." % (function))
